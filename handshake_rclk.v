@@ -1,6 +1,6 @@
 module handshake_rclk #(
-    localparam IDLE_R     = 1'b0,
-    localparam ASSERT_ACK = 1'b1;
+    parameter IDLE_R     = 1'b0,
+    parameter ASSERT_ACK = 1'b1;
 ) (
     
     input                rclk            ,

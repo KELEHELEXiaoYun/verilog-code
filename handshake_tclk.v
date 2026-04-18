@@ -1,7 +1,7 @@
 module handshake_tclk #(
-    localparam DILE_T        = 2'd0,
-    localparam ASSERT_TRDY   = 2'd1,
-    localparam DEASSERT_TRDY = 2'd2
+    parameter DILE_T        = 2'd0,
+    parameter ASSERT_TRDY   = 2'd1,
+    parameter DEASSERT_TRDY = 2'd2
 ) (
     
     input                tclk            ,
