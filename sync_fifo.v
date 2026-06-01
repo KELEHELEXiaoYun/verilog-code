@@ -1,7 +1,7 @@
 module sync_fifo #(
     parameter FIFO_PTR   = 4,
-    parameter FIFO_WIDTH = 32,
-    parameter FIFO_DEPTH = 16
+    parameter FIFO_WIDTH = 16,
+    parameter FIFO_DEPTH = 32
 ) (
     input                            i_fifo_clk,
     input                            i_rst_n,
@@ -76,5 +76,16 @@ module sync_fifo #(
         end
     end
 
-    
+    fifo_generator_0 your_instance_name (
+        .wr_clk(i_fifo_clk),                // input wire wr_clk
+        .rd_clk(i_fifo_clk),                // input wire rd_clk
+        .din(i_fifo_wr_data),                      // input wire [15 : 0] din
+        .wr_en(i_fifo_wren),                  // input wire wr_en
+        .rd_en(i_fifo_rden),                  // input wire rd_en
+        .dout(o_fifo_rd_data),                    // output wire [15 : 0] dout
+        .full(),                    // output wire full
+        .empty(),                  // output wire empty
+        .rd_data_count(r_rd_ptr),  // output wire [8 : 0] rd_data_count
+        .wr_data_count(r_wr_ptr)  // output wire [8 : 0] wr_data_count
+    );
 endmodule
