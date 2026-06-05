@@ -1,23 +1,23 @@
 module handshake_rclk #(
     parameter IDLE_R     = 1'b0,
-    parameter ASSERT_ACK = 1'b1;
+    parameter ASSERT_ACK = 1'b1
 ) (
-    
-    input                rclk            ,
-    input                resetb_rclk     ,
 
-    input                t_ack           ,
-    input       [31:0]   t_data          ,
+    input rclk,
+    input resetb_rclk,
 
-    output  reg          r_ack           ,
+    input        t_ack,
+    input [31:0] t_data,
+
+    output reg r_ack
 
 );
 
 
-    reg         r_hndshk_state, r_hndshk_state_nxt;
-    reg         r_ack_nxt;
-    reg  [31:0] t_data_rclk, t_data_rclk_nxt;
-    reg         t_rdy_d1, t_rdy_rclk;
+    reg r_hndshk_state, r_hndshk_state_nxt;
+    reg r_ack_nxt;
+    reg [31:0] t_data_rclk, t_data_rclk_nxt;
+    reg t_rdy_d1, t_rdy_rclk;
 
     always @(*) begin
         r_hndshk_state_nxt = r_hndshk_state;
@@ -31,16 +31,17 @@ module handshake_rclk #(
                     r_ack_nxt          = 1'b1;
                     t_data_rclk_nxt    = t_data;
                 end
-            end 
+            end
             ASSERT_ACK: begin
                 if (!resetb_rclk) begin
                     r_ack_nxt          = 1'b0;
                     r_hndshk_state_nxt = IDLE_R;
                 end else begin
-                    r_ack_nxt          = 1'b1;
-                end 
+                    r_ack_nxt = 1'b1;
+                end
             end
-            default: begin end
+            default: begin
+            end
         endcase
     end
 
@@ -57,8 +58,8 @@ module handshake_rclk #(
             t_data_rclk    <= t_data_rclk_nxt;
             t_rdy_d1       <= t_rdy;
             t_rdy_rclk     <= t_rdy_d1;
-       end
+        end
     end
-    
+
 endmodule
 

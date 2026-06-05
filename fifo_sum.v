@@ -270,7 +270,7 @@ always @(posedge Sys_clk or negedge Sys_rst_n ) begin
     if (Sys_rst_n == 1'b0) begin
         wr_en_1 == 1'b0;
     end else if (cnt_row == 8'b0 && Pi_flag == 1'b1) begin
-        wr_en_1 <= 1'b1;'
-    end else 
+        wr_en_1 <= 1'b1;
+    end
 end
 endmodule

@@ -1,28 +1,28 @@
-module adder_pipelined(
+module adder_pipelined (
 
-    input           clk,
-    input           rst_n,
+    input clk,
+    input rst_n,
 
-    input  [63:0]   A,
-    input  [63:0]   B,
-    
-    output [64:0]   FinalSUM ,
+    input [63:0] A,
+    input [63:0] B,
+
+    output [64:0] FinalSUM
 
 );
-    reg  [32:0]  Lsum_d1;
-    wire [32:0]  Lsum_d1_nxt,
-    wire         Carry_d1;
-    reg  [31:0]  Lsum_d2, Aup_d1,Bup_d1;
-    reg  [32:0]  Usum_d2;
-    wire [32:0]  Usum_d2_nxt;
+    reg  [32:0] Lsum_d1;
+    wire [32:0] Lsum_d1_nxt;
+    wire        Carry_d1;
+    reg [31:0] Lsum_d2, Aup_d1, Bup_d1;
+    reg  [32:0] Usum_d2;
+    wire [32:0] Usum_d2_nxt;
 
 
     assign Lsum_d1_nxt = A[31:0] + B[31:0];
     assign Carry_d1    = Lsum_d1[32];
     assign Usum_d2_nxt = Carry_d1 + Aup_d1 + Bup_d1;
-    assign FinalSUM    = {Usum_d2,Lsum_d2};
+    assign FinalSUM    = {Usum_d2, Lsum_d2};
 
-    always @(posedge clk or negedge) begin
+    always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
             Lsum_d1 <= 'd0;
             Lsum_d2 <= 'd0;
@@ -37,4 +37,4 @@ module adder_pipelined(
             Usum_d2 <= Usum_d2_nxt;
         end
     end
-endmodule //adder_pipelined
+endmodule  //adder_pipelined

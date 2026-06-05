@@ -1,8 +1,8 @@
 module gray_to_binary #(
-    parameter PTR = 8;
+    parameter PTR = 8
 ) (
-    
-    input  [PTR:0] gray_value,
+
+    input [PTR:0] gray_value,
 
     output [PTR:0] binary_value
 
@@ -17,6 +17,6 @@ module gray_to_binary #(
             assign binary_value[i] = binary_value[i+1] ^ gray_value[i];
         end
     endgenerate
-    
-    
+
+
 endmodule
