@@ -4,23 +4,23 @@ module uart_rx #(
     parameter BPS   = CLK_F / BAUD - 1
 ) (
 
-    input  i_clk_50m,
-    input  i_rst_n_50m,
-    input  i_tx_data,
+    input i_clk_50m,
+    input i_rst_n_50m,
+    input i_tx_data,
 
-    output reg o_rx_done,
+    output reg       o_rx_done,
     output reg [7:0] o_rx_data
 
 );
-    
+
 
     reg  [2:0] r_tx_data_sync;
     reg  [3:0] r_tx_data_cnt;
     reg  [8:0] bps_cnt;
     reg  [7:0] r_data;
-    reg  rx_flag;
+    reg        rx_flag;
 
-    wire start_en;
+    wire       start_en;
 
 
     assign start_en = r_tx_data_sync[2] & ~r_tx_data_sync[1] & ~r_tx_data_sync[0];
@@ -29,7 +29,7 @@ module uart_rx #(
         if (!i_rst_n_50m) begin
             r_tx_data_sync <= 'd0;
         end else begin
-            r_tx_data_sync <= {r_tx_data_sync[1:0],i_tx_data};
+            r_tx_data_sync <= {r_tx_data_sync[1:0], i_tx_data};
         end
     end
 
@@ -52,7 +52,7 @@ module uart_rx #(
             if (bps_cnt == BPS) begin
                 bps_cnt <= 'd0;
             end else begin
-            bps_cnt <= bps_cnt + 'd1;
+                bps_cnt <= bps_cnt + 'd1;
             end
         end else begin
             bps_cnt <= 'd0;
@@ -80,14 +80,14 @@ module uart_rx #(
             r_data <= 'd0;
         end else if (bps_cnt == BPS / 2) begin
             case (r_tx_data_cnt)
-                'd1: r_data[0] <= r_tx_data_sync[2];
-                'd2: r_data[1] <= r_tx_data_sync[2];
-                'd3: r_data[2] <= r_tx_data_sync[2];
-                'd4: r_data[3] <= r_tx_data_sync[2];
-                'd5: r_data[4] <= r_tx_data_sync[2];
-                'd6: r_data[5] <= r_tx_data_sync[2];
-                'd7: r_data[6] <= r_tx_data_sync[2];
-                'd8: r_data[7] <= r_tx_data_sync[2];
+                'd1:     r_data[0] <= r_tx_data_sync[2];
+                'd2:     r_data[1] <= r_tx_data_sync[2];
+                'd3:     r_data[2] <= r_tx_data_sync[2];
+                'd4:     r_data[3] <= r_tx_data_sync[2];
+                'd5:     r_data[4] <= r_tx_data_sync[2];
+                'd6:     r_data[5] <= r_tx_data_sync[2];
+                'd7:     r_data[6] <= r_tx_data_sync[2];
+                'd8:     r_data[7] <= r_tx_data_sync[2];
                 default: r_data <= r_data;
             endcase
         end else begin

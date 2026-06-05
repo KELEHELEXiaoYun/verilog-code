@@ -1,48 +1,48 @@
 module rs485_rx #(
-    parameter CLK_FRE    =50_000_000,
+    parameter CLK_FRE    = 50_000_000,
     parameter BAUD_RATE  = 115200,
     parameter BPS_115200 = CLK_FRE / BAUD_RATE - 1
 ) (
-    
-    input  i_clk,
-    input  i_rst_n,
 
-    input  i_rx_data,
-    input  i_rx_data_ready,
+    input i_clk,
+    input i_rst_n,
+
+    input i_rx_data,
+    input i_rx_data_ready,
 
     output reg [7:0] o_rx_data,
     output reg       o_rx_data_valid
 
 );
 
-    localparam  R_IDLE     = 0;
-    localparam  R_START    = 1;
-    localparam  R_REC_BYTE = 2;
-    localparam  R_STOP     = 3;
-    localparam  R_DATA     = 4;
+    localparam R_IDLE = 0;
+    localparam R_START = 1;
+    localparam R_REC_BYTE = 2;
+    localparam R_STOP = 3;
+    localparam R_DATA = 4;
 
-    reg  [2:0]  sta, sta_nxt;
-    reg  [1:0]  r_rx_data_sync;
+    reg [2:0] sta, sta_nxt;
+    reg  [ 1:0] r_rx_data_sync;
     reg  [15:0] bps_cnt;
-    reg  [2:0]  data_cnt; 
-    reg  [7:0]  r_o_rx_data;
+    reg  [ 2:0] data_cnt;
+    reg  [ 7:0] r_o_rx_data;
     wire        r_rx_data_neg;
-    
+
     assign r_rx_data_neg = r_rx_data_sync[1] & ~r_rx_data_sync[0];
 
     always @(posedge i_clk or negedge i_rst_n) begin
         if (!i_rst_n) begin
             r_rx_data_sync <= 'd0;
         end else begin
-            r_rx_data_sync <= {r_rx_data_sync[0],i_rx_data};
+            r_rx_data_sync <= {r_rx_data_sync[0], i_rx_data};
         end
     end
 
     always @(posedge i_clk or negedge i_rst_n) begin
         if (!i_rst_n) begin
-            sta     <= R_IDLE;
+            sta <= R_IDLE;
         end else begin
-            sta     <= sta_nxt;
+            sta <= sta_nxt;
         end
     end
 
@@ -58,7 +58,7 @@ module rs485_rx #(
             R_START: begin
                 if (bps_cnt == BPS_115200 / 2) begin
                     if (r_rx_data_sync[1] == 'd0) begin
-                    sta_nxt <= R_REC_BYTE;
+                        sta_nxt <= R_REC_BYTE;
                     end else begin
                         sta_nxt <= R_IDLE;
                     end
@@ -138,7 +138,7 @@ module rs485_rx #(
     always @(posedge i_clk or negedge i_rst_n) begin
         if (!i_rst_n) begin
             o_rx_data <= 'd0;
-        end else if (sta == R_STOP && sta !=sta_nxt) begin
+        end else if (sta == R_STOP && sta != sta_nxt) begin
             o_rx_data <= r_o_rx_data;
         end else begin
             o_rx_data <= o_rx_data;

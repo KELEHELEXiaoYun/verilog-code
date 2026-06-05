@@ -13,14 +13,14 @@ module uart_recv (
     parameter UART_BPS = 9600;
     parameter BPS_CNT = CLK_FREQ / UART_BPS;
 
-    reg uart_rxd_d0;
-    reg uart_rxd_d1;
-    reg rx_flag;
-    reg [31:0] clk_cnt;
-    reg [3:0] rx_cnt;
-    reg [7:0] rx_data;
+    reg         uart_rxd_d0;
+    reg         uart_rxd_d1;
+    reg         rx_flag;
+    reg  [31:0] clk_cnt;
+    reg  [ 3:0] rx_cnt;
+    reg  [ 7:0] rx_data;
 
-    wire start_flag;
+    wire        start_flag;
 
     // 打拍
     always @(posedge clk or negedge rst_n) begin
@@ -134,14 +134,14 @@ module uart_send (
     parameter UART_BPS = 9600;
     parameter BPS_CNT = CLK_FREQ / UART_BPS;
 
-    reg uart_en_d0;
-    reg uart_en_d1;
-    reg tx_flag;
-    reg [31:0] clk_cnt;
-    reg [7:0] tx_cnt;
-    reg [7:0] tx_data;
+    reg         uart_en_d0;
+    reg         uart_en_d1;
+    reg         tx_flag;
+    reg  [31:0] clk_cnt;
+    reg  [ 7:0] tx_cnt;
+    reg  [ 7:0] tx_data;
 
-    wire uart_en;
+    wire        uart_en;
 
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
@@ -251,12 +251,12 @@ module uart_loop (
     output reg       send_en
 
 );
-    reg recv_done_d0;
-    reg recv_doned1;
-    reg [7:0] loop_data;
-    reg send_req;
+    reg        recv_done_d0;
+    reg        recv_doned1;
+    reg  [7:0] loop_data;
+    reg        send_req;
 
-    wire recv_done_flag;
+    wire       recv_done_flag;
 
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin

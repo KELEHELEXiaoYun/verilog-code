@@ -5,14 +5,14 @@
 
 // 原代码模块定义（无变化）
 module top_module (
-    input clk,
-    input in,
-    input reset,
+    input            clk,
+    input            in,
+    input            reset,
     output reg [7:0] out_byte,
-    output reg done
+    output reg       done
 );
 
-// 原代码内部信号（修改：添加FSM状态，移除act）
+    // 原代码内部信号（修改：添加FSM状态，移除act）
     // 原代码：
     // reg [7:0] imm_byte;
     // reg [3:0] counter;
@@ -28,7 +28,7 @@ module top_module (
     reg [7:0] imm_byte;
     reg [3:0] counter;
 
-// 原代码第一个always块（修改：替换为FSM状态转换）
+    // 原代码第一个always块（修改：替换为FSM状态转换）
     // 原代码：
     // always @(posedge clk) begin
     //     if (reset) begin
@@ -56,7 +56,7 @@ module top_module (
         end
     end
 
-// 添加：FSM下一状态逻辑
+    // 添加：FSM下一状态逻辑
     // 修正代码新增：
     always @(*) begin
         case (state)
@@ -85,7 +85,7 @@ module top_module (
         endcase
     end
 
-// 原代码第二个always块（修改：数据采样逻辑）
+    // 原代码第二个always块（修改：数据采样逻辑）
     // 原代码：
     // always @(posedge clk) begin
     //     if (reset) begin
@@ -107,7 +107,7 @@ module top_module (
 
     // 修正代码：整合到数据路径always块中
 
-// 原代码第三个always块（修改：out_byte逻辑）
+    // 原代码第三个always块（修改：out_byte逻辑）
     // 原代码：
     // always @(posedge clk) begin
     //     if (reset) begin
@@ -119,7 +119,7 @@ module top_module (
 
     // 修正代码：整合到数据路径always块中
 
-// 原代码第四个always块（修改：done逻辑）
+    // 原代码第四个always块（修改：done逻辑）
     // 原代码：
     // always @(posedge clk) begin
     //     if (reset) begin
@@ -133,31 +133,31 @@ module top_module (
 
     // 修正代码：整合到数据路径always块中
 
-// 修正代码：统一的数据路径和计数器always块
+    // 修正代码：统一的数据路径和计数器always块
     // 修正代码新增：
     always @(posedge clk or posedge reset) begin
         if (reset) begin
-            counter <= 0;
+            counter  <= 0;
             imm_byte <= 0;
             out_byte <= 0;
-            done <= 0;
+            done     <= 0;
         end else begin
             case (state)
                 IDLE: begin
                     counter <= 0;
-                    done <= 0;
+                    done    <= 0;
                     if (next_state == RECEIVE) begin
                         // 起始位后，开始接收
                     end
                 end
                 RECEIVE: begin
                     imm_byte[counter] <= in;  // LSB first: counter=0 是LSB
-                    counter <= counter + 1;
+                    counter           <= counter + 1;
                 end
                 STOP: begin
                     if (in == 1) begin
                         out_byte <= imm_byte;  // 输出接收的数据
-                        done <= 1;
+                        done     <= 1;
                     end
                     // 回到IDLE时重置
                 end

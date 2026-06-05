@@ -1,9 +1,9 @@
 module binary_to_gray #(
     parameter PTR = 8
 ) (
-    
-    input  [PTR:0] binary_value,
-    
+
+    input [PTR:0] binary_value,
+
     output [PTR:0] gray_value
 
 );
@@ -18,6 +18,6 @@ module binary_to_gray #(
 
 
     assign gray_value[PTR] = binary_value[PTR];
-    
-    
+
+
 endmodule

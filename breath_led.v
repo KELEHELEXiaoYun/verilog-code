@@ -7,7 +7,7 @@ module breath_led (
 
     reg [15:0] cnt;
     reg [15:0] duty_cycle;
-    reg inc_dec_flag;  //0递增  1递减
+    reg        inc_dec_flag;  //0递增  1递减
 
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin

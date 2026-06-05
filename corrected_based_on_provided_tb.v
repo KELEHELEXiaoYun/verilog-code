@@ -2,11 +2,11 @@
 
 module corrected_based_on_provided_tb;
 
-    reg clk;
-    reg in;
-    reg reset;
+    reg        clk;
+    reg        in;
+    reg        reset;
     wire [7:0] out_byte;
-    wire done;
+    wire       done;
 
     // 实例化被测试的模块
     top_module uut (
@@ -66,7 +66,8 @@ module corrected_based_on_provided_tb;
         // 等待接收完成
         #100;
         if (done) begin
-            $display("✓ 接收完成！ done=%b, out_byte=%h (预期: %h)", done, out_byte, 8'hA5);
+            $display("✓ 接收完成！ done=%b, out_byte=%h (预期: %h)", done, out_byte,
+                     8'hA5);
             if (out_byte == 8'hA5) begin
                 $display("✓ 数据正确！");
             end else begin
@@ -110,7 +111,8 @@ module corrected_based_on_provided_tb;
         // 等待接收完成
         #100;
         if (done) begin
-            $display("✓ 接收完成！ done=%b, out_byte=%h (预期: %h)", done, out_byte, 8'h42);
+            $display("✓ 接收完成！ done=%b, out_byte=%h (预期: %h)", done, out_byte,
+                     8'h42);
             if (out_byte == 8'h42) begin
                 $display("✓ 数据正确！");
             end else begin

@@ -1,44 +1,44 @@
-module uart_test#(
-    parameter         CLK_FRE = 50_000_000	
-)(
-    input             i_clk,       
-    input             i_rst_n,  
+module uart_test #(
+    parameter CLK_FRE = 50_000_000
+) (
+    input i_clk,
+    input i_rst_n,
 
-	input             i_rs485_rx,      
-	
-    output            o_rs485_tx,      
-	output	reg		  o_rs485_de 
+    input i_rs485_rx,
+
+    output     o_rs485_tx,
+    output reg o_rs485_de
 );
 
-    localparam  IDLE 	    =  0;
-    localparam  CV_HEAD 	=  1;
-    localparam  RCV_COUNT 	=  2;
-    localparam  RCV_DATA 	=  3;  
-    localparam  WAIT		=  4;  
-    localparam  SEND_WAIT   =  5;  
-    localparam  SEND		=  6;
+    localparam IDLE = 0;
+    localparam CV_HEAD = 1;
+    localparam RCV_COUNT = 2;
+    localparam RCV_DATA = 3;
+    localparam WAIT = 4;
+    localparam SEND_WAIT = 5;
+    localparam SEND = 6;
 
-    reg  [2:0]  sta;
- 
+    reg  [ 2:0] sta;
+
     reg         i_rx_data;
     reg         i_rx_data_ready;
-    wire [7:0]  o_rx_data;
+    wire [ 7:0] o_rx_data;
     wire        o_rx_data_valid;
-    reg  [7:0]  rx_cnt;
- 
-    reg  [7:0]  i_tx_data;
+    reg  [ 7:0] rx_cnt;
+
+    reg  [ 7:0] i_tx_data;
     reg         i_tx_data_valid;
     wire        o_tx_data;
     wire        o_tx_data_ready;
-    reg  [7:0]  tx_cnt;
- 
-    reg  [7:0]  data_count;
+    reg  [ 7:0] tx_cnt;
+
+    reg  [ 7:0] data_count;
     reg  [31:0] wait_cnt;
 
     reg         fifo_wren;
     reg         fifo_rden;
-    reg  [7:0]  fifo_wdata;
-    wire [7:0]  fifo_rdata;
+    reg  [ 7:0] fifo_wdata;
+    wire [ 7:0] fifo_rdata;
 
 
     always @(posedge i_clk or negedge i_rst_n) begin
@@ -51,23 +51,23 @@ module uart_test#(
             data_count      <= 'd0;
         end else begin
             case (sta)
-                IDLE:begin
+                IDLE: begin
                     sta             <= CV_HEAD;
                     o_rs485_de      <= 'd0;
                     i_rx_data_ready <= 'd1;
-                end 
+                end
                 CV_HEAD: begin
                     if (o_rx_data_valid && o_rx_data == 'h55) begin
                         sta <= RCV_COUNT;
                     end
                 end
-                RCV_COUNT:begin
+                RCV_COUNT: begin
                     if (o_rx_data_valid) begin
                         if (o_rx_data > 0) begin
-                            sta        <= RCV_DATA;
+                            sta <= RCV_DATA;
                         end else begin
-                            sta        <= IDLE;
-                        end 
+                            sta <= IDLE;
+                        end
                         data_count <= o_rx_data;
                     end else begin
                         sta <= IDLE;
@@ -78,11 +78,11 @@ module uart_test#(
                     fifo_wdata <= o_rx_data;
                     if (o_rx_data_valid) begin
                         if (rx_cnt == data_count - 1) begin
-                            rx_cnt   <= 'd0;
+                            rx_cnt     <= 'd0;
                             o_rs485_de <= 'd1;
-                            sta      <= WAIT;
+                            sta        <= WAIT;
                         end else begin
-                            rx_cnt   <= rx_cnt + 'd1;
+                            rx_cnt <= rx_cnt + 'd1;
                         end
                     end
                 end
@@ -103,8 +103,8 @@ module uart_test#(
                             sta       <= IDLE;
                         end
                     end else begin
-                        fifo_rden   <= 'd1;
-                        sta         <= SEND;
+                        fifo_rden <= 'd1;
+                        sta       <= SEND;
                     end
                     i_tx_data_valid <= 'd0;
                 end
@@ -116,20 +116,19 @@ module uart_test#(
                         sta    <= SEND_WAIT;
                     end
                 end
-                default: sta <= IDLE; 
+                default: sta <= IDLE;
             endcase
         end
     end
 
-    rx_fifo fifo_inst
-    (
-       .clk 						(sys_clk					),
-       .srst 						(~rst_n						),  // FIFO 高电平复位
-       .din 						(fifo_wdata					),  // 写数据
-       .wr_en 						(fifo_wren					),  // 写使能
-       .rd_en 						(fifo_rden					),  // 读使能
-       .dout 						(fifo_rdata					),  // 读数据
-       .full 						(							),
-       .empty 						(							)
-     );
+    rx_fifo fifo_inst (
+        .clk  (sys_clk),
+        .srst (~rst_n),      // FIFO 高电平复位
+        .din  (fifo_wdata),  // 写数据
+        .wr_en(fifo_wren),   // 写使能
+        .rd_en(fifo_rden),   // 读使能
+        .dout (fifo_rdata),  // 读数据
+        .full (),
+        .empty()
+    );
 endmodule

@@ -1,7 +1,7 @@
 always @(posedge clk or negedge rst_n) begin
-        if (!rst_n) begin
-           
-        end else begin
-           
-        end
+    if (!rst_n) begin
+
+    end else begin
+
     end
+end

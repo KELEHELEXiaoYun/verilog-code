@@ -33,10 +33,11 @@ module Conway_s_Game_Of_Life_16_16 (
     always @(*) begin
         for (i = 1; i < 17; i = i + 1) begin
             for (j = 1; j < 17; j = j + 1) begin
-                up     = two_reg[i-1];
+                up = two_reg[i-1];
                 middle = two_reg[i];
-                down   = two_reg[i+1];
-                count  = up[j] + up[j+1] + up[j-1] + middle[j-1] + middle[j+1] + down[j] + down[j+1] + down[j-1];
+                down = two_reg[i+1];
+                count = up[j] + up[j+1] + up[j-1] + middle[j-1] + middle[j+1] + down[j] +
+                    down[j+1] + down[j-1];
                 if (count == 2) begin
                     q_next[i][j] = two_reg[i][j];
                 end else if (count == 3) begin

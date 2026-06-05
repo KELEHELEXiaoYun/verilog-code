@@ -1,13 +1,13 @@
 module reset_synchronizer (
 
-    input  clkb,
-    input  rstb_in,
+    input clkb,
+    input rstb_in,
 
     output reg rstb_sync
 
 );
 
-    reg  rstb_in_pre;
+    reg rstb_in_pre;
 
     always @(posedge clkb or negedge rstb_in) begin
         if (rstb_in) begin
@@ -18,5 +18,5 @@ module reset_synchronizer (
             rstb_sync   <= rstb_in_pre;
         end
     end
-    
+
 endmodule

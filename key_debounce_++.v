@@ -3,12 +3,12 @@ module key_debounce (
     input rst_n,
 
     input key,
-    
+
     output reg key_value,
     output reg key_flag
 );
     reg [19:0] cnt;
-    reg key_reg;
+    reg        key_reg;
 
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
@@ -22,7 +22,7 @@ module key_debounce (
         if (!rst_n) begin
             cnt <= 0;
         end else if (key_reg != key) begin
-                cnt <= 0;
+            cnt <= 0;
         end else begin
             if (cnt == 20'd999_999) begin
                 cnt <= 0;
@@ -34,28 +34,28 @@ module key_debounce (
 
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
-           key_flag <= 0;
+            key_flag <= 0;
         end else begin
-           if (cnt == 20'd999_998) begin
+            if (cnt == 20'd999_998) begin
                 key_flag <= 1'b1;
-           end else begin
+            end else begin
                 key_flag <= 0;
-           end
+            end
         end
     end
 
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
-           key_value <= 1;
+            key_value <= 1;
         end else begin
-           if (cnt == 20'd999_998) begin
+            if (cnt == 20'd999_998) begin
                 key_value <= key;
-           end else begin
+            end else begin
                 key_value <= key_value;
-           end
+            end
         end
     end
-    
+
 endmodule
 
 
@@ -72,13 +72,13 @@ module beep_control (
 
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
-           beep <= 1;
+            beep <= 1;
         end else begin
-           if (key_flag && key_value == 0) begin
+            if (key_flag && key_value == 0) begin
                 beep <= ~beep;
-           end else begin
+            end else begin
                 beep <= beep;
-           end  
+            end
         end
     end
 
@@ -89,36 +89,36 @@ module top_beep (
     input rst_n,
 
     input key,
-    
+
     output beep
 );
 
     wire key_value;
     wire key_flag;
-    
+
     key_debounce u_key_debounce (
-        .clk(clk),
+        .clk  (clk),
         .rst_n(rst_n),
 
-        .key(key),
+        .key      (key),
         .key_value(key_value),
-        .key_flag(key_flag)
+        .key_flag (key_flag)
     );
 
     beep_control u_beep_control (
-        .clk(clk),
+        .clk  (clk),
         .rst_n(rst_n),
 
         .key_value(key_value),
-        .key_flag(key_flag),
-        .beep(beep)
+        .key_flag (key_flag),
+        .beep     (beep)
     );
 endmodule
 
 // always @(posedge clk or negedge rst_n) begin
 //         if (!rst_n) begin
-           
+
 //         end else begin
-           
+
 //         end
 //     end
